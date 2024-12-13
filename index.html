@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Birthday Animation</title>
+    <style>
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        p {
+            margin: 0 0;
+            position: absolute;
+            font: 16px Verdana;
+            color: #eee;
+            height: 25px;
+            top: calc(100vh - 30px);
+            text-shadow: 0 0 2px white;
+        }
+        p a {
+            text-decoration: none;
+            color: #aaa;
+        }
+        span {
+            font-size: 11px;
+        }
+        p > a:first-of-type {
+            font-size: 20px;
+        }
+        body {
+            overflow: hidden;
+        }
+        #continueButton {
+            display: none;
+            position: fixed;
+            top: 85vh;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            font-size: 18px;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 1000;
+            
+            background: linear-gradient(45deg, #ff0066, #ff00ff, #00ffff, #ff0066);
+            background-size: 300% 300%;
+            animation: gradient 3s ease infinite, glow 1s ease-in-out infinite alternate;
+            
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            
+            box-shadow: 0 0 20px rgba(255,0,102,0.5),
+                       0 0 30px rgba(255,0,255,0.5),
+                       0 0 40px rgba(0,255,255,0.5);
+            
+            transition: all 0.3s ease;
+        }
+        #continueButton:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 30px rgba(255,0,102,0.8),
+                       0 0 50px rgba(255,0,255,0.8),
+                       0 0 70px rgba(0,255,255,0.8);
+        }
+        #continueButton:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        @keyframes glow {
+            from {
+                filter: brightness(100%);
+            }
+            to {
+                filter: brightness(130%);
+            }
+        }
+        @keyframes appear {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="c"></canvas>
+    <button id="continueButton">Tiếp tục</button>
+    <p>From the codepals to <a href="https://www.tiktok.com/@tgrey.hoc.it">TGrey</a></p>
+
+    <script src="script.js"></script>
+</body>
+</html>

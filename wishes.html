@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Birthday Wishes</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        }
+
+        /* Background iframe */
+        .background-frame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: -1;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            gap: 40px;
+            max-width: 1400px;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeIn 1s ease forwards 7s;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .profile-section {
+            flex: 0 0 300px;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+            text-align: center;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background-size: 200% 100%;
+            animation: shine 3s linear infinite;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .profile-image {
+            width: 300px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: float 3s ease-in-out infinite;
+            transition: transform 0.3s ease, opacity 0.5s ease;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            transition: all 0.5s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            filter: brightness(1.1);
+        }
+
+        .profile-name {
+            margin-top: 20px;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255,255,255,0.5),
+                         0 0 10px rgba(255,255,255,0.3),
+                         0 0 15px rgba(255,255,255,0.2);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .profile-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            text-shadow: 0 0 5px rgba(255,255,255,0.5),
+                         0 0 10px rgba(255,255,255,0.3),
+                         0 0 15px rgba(255,255,255,0.2);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .wishes-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            width: 900px;
+        }
+
+        .note {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            width: calc(33.33% - 20px);
+            min-width: 250px;
+            transform-origin: center;
+            opacity: 0;
+            animation: appear 0.5s ease forwards;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            backdrop-filter: blur(5px);
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+            background-image: 
+                linear-gradient(#d1d1d1 1.5px, transparent 1.5px);
+            background-size: 100% 28px;
+            background-position: 0 30px;
+            line-height: 28px;
+        }
+
+        .note::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            border-radius: 10px 10px 0 0;
+        }
+
+        .note::after {
+            display: none;
+        }
+
+        .note h2 {
+            margin: 0 0 20px 0;
+            color: #2d3436;
+            font-size: 20px;
+        }
+
+        .note p {
+            margin: 0;
+            color: #636e72;
+            line-height: 1.6;
+            font-size: 16px;
+            padding-top: 5px;
+        }
+
+        .note:hover {
+            transform: translateZ(20px) rotateX(5deg) rotateY(5deg);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .wishes-section {
+                width: 600px;
+            }
+            .note {
+                width: calc(50% - 15px);
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .profile-section {
+                position: relative;
+                margin-bottom: 40px;
+            }
+            .wishes-section {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .note {
+                width: 100%;
+            }
+            .profile-image {
+                width: 200px;
+                height: 300px;
+            }
+        }
+
+        /* Thêm animation delay cho từng note */
+        .note:nth-child(1) { animation-delay: 7s; }
+        .note:nth-child(2) { animation-delay: 7.3s; }
+        .note:nth-child(3) { animation-delay: 7.6s; }
+        .note:nth-child(4) { animation-delay: 7.9s; }
+        .note:nth-child(5) { animation-delay: 8.2s; }
+        .note:nth-child(6) { animation-delay: 8.5s; }
+
+        .tiktok-logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #FFD700;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 20px;
+            text-shadow: 
+                0 0 5px #FFD700,
+                0 0 10px #FFD700,
+                0 0 20px #FFD700;
+            z-index: 1000;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .tiktok-logo:hover {
+            opacity: 1;
+        }
+
+        .tiktok-logo i {
+            margin-right: 5px;
+            font-size: 24px;
+        }
+
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .audio-control button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .audio-control button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .social-share {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-share button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .social-share button:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .flower {
+            position: fixed;
+            top: -20px;
+            font-size: 20px;
+            animation: falling linear forwards;
+            z-index: 1;
+        }
+
+        @keyframes falling {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        @keyframes shine {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(255,255,255,0.5),
+                            0 0 10px rgba(255,255,255,0.3),
+                            0 0 15px rgba(255,255,255,0.2);
+            }
+            to {
+                text-shadow: 0 0 10px rgba(255,255,255,0.7),
+                            0 0 20px rgba(255,255,255,0.5),
+                            0 0 30px rgba(255,255,255,0.3);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <iframe src="heart.html" class="background-frame"></iframe>
+    
+    <audio autoplay loop id="bgMusic">
+        <source src="sound/soundbackground.m4a" type="audio/mp4">
+        Your browser does not support the audio element. 
+    </audio>
+
+    <div class="audio-control">
+        <button id="toggleMusic">
+            <i class="fas fa-volume-up"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="profile-section">
+            <img src="image/anh1.jpg" alt="Profile" class="profile-image" id="profileImage">
+            <div class="profile-name">Happy Birthday! 🎂</div>
+            <div class="profile-text">Chúc mừng sinh nhật Bảo Trâm</div>
+        </div>
+        
+        <div class="wishes-section">
+            <div class="note" style="animation-delay: 8s;">
+                <h2>Chúc mừng sinh nhật! 🎉</h2>
+                <p>Chúc em một ngày sinh nhật thật vui vẻ và hạnh phúc. Mong rằng tuổi mới sẽ mang đến cho em thật nhiều niềm vui, may mắn và thành công trong cuộc sống.</p>
+            </div>
+
+            <div class="note" style="animation-delay: 10s;">
+                <h2>Ước mơ và hoài bão 🌟</h2>
+                    <p>Chúc em luôn mạnh mẽ và kiên định với ước mơ ca mình. Hãy tiếp tục theo đuổi đam mê và đừng bao giờ từ bỏ những điều mình mong muốn.</p>
+            </div>
+
+            <div class="note" style="animation-delay: 12s;">
+                <h2>Hạnh phúc và yêu thương ❤️</h2>
+                <p>Mong rằng cuộc sống của em sẽ luôn tràn ngập tình yêu thương, được bao quanh bởi những người thân yêu và những người bạn tốt.</p>
+            </div>
+
+            <div class="note" style="animation-delay: 14s;">
+                <h2>Sức khỏe và bình an 🍀</h2>
+                <p>Chúc em luôn mạnh khỏe, tràn đầy năng lượng để theo đuổi những điều mình mong muốn. Mong mọi điều tốt đẹp sẽ đến với em trong năm mới này.</p>
+            </div>
+            <div class="note" style="animation-delay: 16.5s;">
+                <h2>Tình yêu ngọt ngào 💝</h2>
+                <p>Chúc em luôn xinh đẹp và rạng ngời như đóa hoa ban mai. Mong rằng tình yêu sẽ đến với em thật dịu dàng như gió xuân, ngọt ngào như mật ong, và ấm áp như nắng sớm. Chúc em tìm được người luôn nâng niu, trân trọng và yêu thương em hết lòng.</p>
+            </div>
+
+            <div class="note" style="animation-delay: 18s;">
+                <h2>Niềm vui và tiếng cười 😂</h2>
+                <p>Chúc em luôn giữ được nụ cười trên môi và tìm thấy niềm vui trong mọi khoảnh khắc của cuộc sống. Hãy sống thật hạnh phúc và trọn vẹn nhé.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tiktok-logo">
+        <i class="fab fa-tiktok"></i>tiktok: tgrey.hoc.it
+    </div>
+
+    <div class="social-share">
+        <button onclick="window.open('https://www.facebook.com/thanhgrey1410')">
+            <i class="fab fa-facebook"></i>
+        </button>
+
+    </div>
+
+    <script>
+        const images = [
+            'image/anh1.jpg',
+            'image/anh2.jpg',
+            'image/anh3.jpg',
+            'image/anh4.jpg',
+            'image/anh5.jpg',
+            // Thêm các ảnh khác vào đây
+        ];
+        let currentImageIndex = 0;
+        const profileImage = document.getElementById('profileImage');
+
+        function changeImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            profileImage.style.opacity = '0';
+            
+            setTimeout(() => {
+                profileImage.src = images[currentImageIndex];
+                profileImage.style.opacity = '1';
+            }, 500);
+        }
+
+        setInterval(changeImage, 2000);
+
+        const music = document.getElementById('bgMusic');
+        const toggleButton = document.getElementById('toggleMusic');
+        const volumeIcon = toggleButton.querySelector('i');
+
+        toggleButton.addEventListener('click', () => {
+            if (music.paused) {
+                music.play();
+                volumeIcon.className = 'fas fa-volume-up';
+            } else {
+                music.pause();
+                volumeIcon.className = 'fas fa-volume-mute';
+            }
+        });
+
+        // Thêm code để tự động phát nhạc
+        window.addEventListener('load', function() {
+            const music = document.getElementById('bgMusic');
+            
+            // Thử phát nhạc
+            let playPromise = music.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // Phát nhạc thành công
+                    console.log("Audio started playing");
+                })
+                .catch(error => {
+                    // Tự động phát bị chặn
+                    console.log("Audio autoplay was prevented");
+                });
+            }
+        });
+
+        // Thêm xử lý khi user tương tác với trang
+        document.addEventListener('click', function() {
+            const music = document.getElementById('bgMusic');
+            if (music.paused) {
+                music.play();
+            }
+        }, { once: true });
+
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            flower.style.left = Math.random() * 100 + 'vw';
+            flower.style.animationDuration = Math.random() * 3 + 2 + 's';
+            const flowers = ['🩱', '🩲', '👙    '];
+            flower.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
+            document.body.appendChild(flower);
+            
+            setTimeout(() => {
+                flower.remove();
+            }, 5000);
+        }
+
+        setTimeout(() => {
+            setInterval(createFlower, 300);
+        }, 7000); // Đợi 7 giây trước khi bắt đầu tạo hoa
+
+        function typeWriter(element, text, speed = 50) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Áp dụng hiệu ứng gõ chữ cho các note
+        document.querySelectorAll('.note p').forEach(note => {
+            const text = note.innerHTML;
+            note.innerHTML = '';
+            
+            // Lấy animation-delay từ style của note parent
+            const delay = parseFloat(note.parentElement.style.animationDelay) * 1000;
+            
+            setTimeout(() => {
+                typeWriter(note, text);
+            }, delay + 500); // Thêm 500ms để đảm bảo note đã hiện ra
+        });
+    </script>
+</body>
+</html> 

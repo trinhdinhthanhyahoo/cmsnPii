@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Special Gift</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .title {
+            color: #fff;
+            font-size: 28px;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: titleAppear 1s ease forwards 5s;
+        }
+
+        .gift-container {
+            display: none;
+            position: relative;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .gift {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #4B0082, #483D8B);
+            position: relative;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 30px rgba(75, 0, 130, 0.5),
+                0 0 60px rgba(75, 0, 130, 0.3),
+                0 0 90px rgba(75, 0, 130, 0.1);
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .gift::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 200px;
+            background: linear-gradient(45deg, #483D8B, #4B0082);
+            left: 80px;
+            transform-origin: top;
+            transform: rotateY(-90deg);
+            border-radius: 20px;
+        }
+
+        .gift::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 40px;
+            background: linear-gradient(45deg, #483D8B, #4B0082);
+            top: 80px;
+            transform-origin: left;
+            border-radius: 20px;
+        }
+
+        .ribbon {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #800080;
+            border-radius: 50%;
+            top: -20px;
+            left: 70px;
+            z-index: 1;
+            box-shadow: 0 0 30px rgba(128, 0, 128, 0.5);
+        }
+
+        .ribbon::before,
+        .ribbon::after {
+            content: '♐';
+            position: absolute;
+            width: 30px;
+            height: 60px;
+            background: #800080;
+            border-radius: 30px;
+            color: #FFD700;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ribbon::before {
+            left: -35px;
+            transform: rotate(-45deg);
+        }
+
+        .ribbon::after {
+            right: -35px;
+            transform: rotate(45deg);
+        }
+
+        .gift-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            bottom: -50px;
+            color: white;
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate3d(1, 1, 1, 0deg); }
+            50% { transform: translateY(-20px) rotate3d(1, 1, 1, 5deg); }
+            100% { transform: translateY(0px) rotate3d(1, 1, 1, 0deg); }
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff4081, 0 0 20px #ff4081;
+            }
+            to {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff4081, 0 0 40px #ff4081;
+            }
+        }
+
+        @keyframes titleAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #ff4081;
+            pointer-events: none;
+        }
+
+        .flower-petal {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            background: linear-gradient(45deg, #ff4081, #ff79b0);
+            border-radius: 50% 50% 0 0;
+            transform-origin: bottom center;
+            opacity: 0;
+        }
+
+        @keyframes shoot {
+            0% { transform: translateY(100vh); }
+            50% { transform: translateY(20vh); }
+            100% { transform: translateY(30vh); }
+        }
+
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        @keyframes petalFloat {
+            0% {
+                transform: rotate(var(--rotation)) translateY(0) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(var(--rotation)) translateY(100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .tiktok-logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #FFD700;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 20px;
+            text-shadow: 
+                0 0 5px #FFD700,
+                0 0 10px #FFD700,
+                0 0 20px #FFD700;
+            z-index: 1000;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .tiktok-logo:hover {
+            opacity: 1;
+        }
+
+        .tiktok-logo i {
+            margin-right: 5px;
+            font-size: 24px;
+        }
+
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .audio-control button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .audio-control button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .gift.opening {
+            animation: openGift 3s ease forwards;
+            transform-origin: bottom;
+        }
+
+        .ribbon.opening {
+            animation: fadeOutRibbon 0.5s ease forwards;
+        }
+
+        @keyframes openGift {
+            0% { transform: rotateX(0); }
+            30% { transform: rotateX(-110deg); }
+            60% { transform: rotateX(-110deg) scale(0.9); }
+            100% { 
+                transform: rotateX(-110deg) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeOutRibbon {
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        .gift-piece {
+            position: absolute;
+            background: linear-gradient(45deg, #4B0082, #483D8B);
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 1;
+            box-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(75, 0, 130, 0.5);
+        }
+
+        .explosion-light {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            background: radial-gradient(
+                circle,
+                rgba(255, 255, 255, 0.8) 0%,
+                rgba(255, 64, 129, 0.6) 40%,
+                transparent 70%
+            );
+        }
+
+        @keyframes expandLight {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <audio autoplay loop id="bgMusic">
+        <source src="sound/amthanhphaohoa.m4a" type="audio/mp4">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="audio-control">
+        <button id="toggleMusic">
+            <i class="fas fa-volume-up"></i>
+        </button>
+    </div>
+
+    <div class="title">Quà tặng em 🎁</div>
+    <div class="gift-container">
+        <div class="ribbon"></div>
+        <div class="gift"></div>
+        <div class="gift-text">Click me!</div>
+    </div>
+
+    <script>
+        // Show gift after 5 seconds
+        setTimeout(() => {
+            document.querySelector('.gift-container').style.display = 'block';
+        }, 5000);
+
+        // Handle gift click
+        document.querySelector('.gift-container').addEventListener('click', function() {
+            const gift = document.querySelector('.gift');
+            const ribbon = document.querySelector('.ribbon');
+            const giftText = document.querySelector('.gift-text');
+            
+            // Ẩn hộp quà và ruy băng
+            gift.style.opacity = '0';
+            ribbon.style.opacity = '0';
+            giftText.style.display = 'none';
+            
+            // Tạo hiệu ứng nổ
+            createExplosion(gift.getBoundingClientRect());
+            
+            // Tạo nhiều pháo hoa khi mở hộp
+            for(let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * (window.innerHeight * 0.5);
+                    createFirework(x, y);
+                }, i * 200);
+            }
+            
+            // Chuyển trang sau 3 giây
+            setTimeout(() => {
+                window.location.href = 'wishes.html';
+            }, 3000);
+        });
+
+        // Thêm hàm tạo hiệu ứng nổ
+        function createExplosion(giftRect) {
+            const pieces = 30; // Tăng số lượng mảnh vỡ
+            const centerX = giftRect.left + giftRect.width / 2;
+            const centerY = giftRect.top + giftRect.height / 2;
+
+            // Tạo hiệu ứng ánh sáng nổ
+            const light = document.createElement('div');
+            light.className = 'explosion-light';
+            light.style.left = centerX + 'px';
+            light.style.top = centerY + 'px';
+            light.style.width = '100px';
+            light.style.height = '100px';
+            light.style.transform = 'translate(-50%, -50%)';
+            document.body.appendChild(light);
+
+            light.animate([
+                { transform: 'translate(-50%, -50%) scale(0)', opacity: 1 },
+                { transform: 'translate(-50%, -50%) scale(4)', opacity: 0 }
+            ], {
+                duration: 1000,
+                easing: 'ease-out'
+            }).onfinish = () => light.remove();
+
+            // Tạo các mảnh vỡ với nhiều lớp
+            for (let i = 0; i < pieces; i++) {
+                // Mảnh vỡ chính
+                createPiece(centerX, centerY, i, pieces);
+                
+                // Mảnh vỡ phụ nhỏ hơn
+                if (i % 2 === 0) {
+                    createPiece(centerX, centerY, i, pieces, true);
+                }
+            }
+
+            // Tạo hiệu ứng tia lửa
+            createSparks(centerX, centerY);
+        }
+
+        function createPiece(centerX, centerY, index, total, isSmall = false) {
+            const piece = document.createElement('div');
+            piece.className = 'gift-piece';
+            
+            // Kích thước ngẫu nhiên cho mảnh vỡ
+            const size = isSmall ? 
+                Math.random() * 15 + 5 : 
+                Math.random() * 30 + 10;
+            
+            piece.style.width = size + 'px';
+            piece.style.height = size + 'px';
+            
+            // Thêm gradient và màu sắc ngẫu nhiên
+            const hue = Math.random() * 60 - 30; // Biến đổi màu trong phạm vi nhỏ
+            piece.style.background = `linear-gradient(45deg, 
+                hsl(${280 + hue}, 100%, 25%), 
+                hsl(${280 + hue}, 100%, 35%))`;
+            
+            piece.style.left = centerX + 'px';
+            piece.style.top = centerY + 'px';
+            
+            document.body.appendChild(piece);
+            
+            const angle = (index / total) * 360 + Math.random() * 30 - 15;
+            const distance = Math.random() * 300 + (isSmall ? 100 : 200);
+            const duration = Math.random() * 1000 + (isSmall ? 500 : 1000);
+            
+            piece.animate([
+                { 
+                    transform: 'translate(-50%, -50%) rotate(0deg) scale(1)',
+                    opacity: 1
+                },
+                { 
+                    transform: `translate(
+                        calc(-50% + ${Math.cos(angle * Math.PI / 180) * distance}px), 
+                        calc(-50% + ${Math.sin(angle * Math.PI / 180) * distance}px)
+                    ) rotate(${Math.random() * 1080}deg) scale(0)`,
+                    opacity: 0
+                }
+            ], {
+                duration: duration,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                fill: 'forwards'
+            }).onfinish = () => piece.remove();
+        }
+
+        function createSparks(centerX, centerY) {
+            const sparksCount = 20;
+            
+            for (let i = 0; i < sparksCount; i++) {
+                const spark = document.createElement('div');
+                spark.className = 'gift-piece';
+                spark.style.width = '2px';
+                spark.style.height = '2px';
+                spark.style.background = 'white';
+                spark.style.boxShadow = '0 0 10px #fff, 0 0 20px #ff4081, 0 0 30px #ff4081';
+                spark.style.left = centerX + 'px';
+                spark.style.top = centerY + 'px';
+                
+                document.body.appendChild(spark);
+                
+                const angle = (i / sparksCount) * 360 + Math.random() * 30 - 15;
+                const distance = Math.random() * 200 + 100;
+                
+                spark.animate([
+                    { 
+                        transform: 'translate(-50%, -50%) scale(1)',
+                        opacity: 1
+                    },
+                    { 
+                        transform: `translate(
+                            calc(-50% + ${Math.cos(angle * Math.PI / 180) * distance}px), 
+                            calc(-50% + ${Math.sin(angle * Math.PI / 180) * distance}px)
+                        ) scale(0)`,
+                        opacity: 0
+                    }
+                ], {
+                    duration: Math.random() * 500 + 500,
+                    easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                    fill: 'forwards'
+                }).onfinish = () => spark.remove();
+            }
+        }
+
+        function createFirework(x, y) {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = x + 'px';
+            firework.style.bottom = '0';
+            document.body.appendChild(firework);
+
+            // Animation bắn lên
+            firework.animate([
+                { transform: 'translateY(0)' },
+                { transform: `translateY(-${y}px)` }
+            ], {
+                duration: 1000,
+                easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+            }).onfinish = () => {
+                createFlower(x, window.innerHeight - y);
+                firework.remove();
+            };
+        }
+
+        function createFlower(x, y) {
+            const petalCount = 12;
+            for(let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'flower-petal';
+                petal.style.left = x + 'px';
+                petal.style.top = y + 'px';
+                petal.style.setProperty('--rotation', `${(360 / petalCount) * i}deg`);
+                document.body.appendChild(petal);
+
+                petal.animate([
+                    { transform: `rotate(${(360 / petalCount) * i}deg) scale(0)`, opacity: 0 },
+                    { transform: `rotate(${(360 / petalCount) * i}deg) scale(1)`, opacity: 1, offset: 0.2 },
+                    { transform: `rotate(${(360 / petalCount) * i}deg) translateY(100px) scale(0.5)`, opacity: 0 }
+                ], {
+                    duration: 1500,
+                    easing: 'ease-out'
+                }).onfinish = () => petal.remove();
+            }
+        }
+
+        // Tự động bắn pháo hoa
+        function autoFireworks() {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * (window.innerHeight * 0.5) + window.innerHeight * 0.3;
+            createFirework(x, y);
+        }
+
+        // Bắn pháo hoa ngay khi trang load
+        function startFireworks() {
+            // Bắn pháo hoa ngay lập tức
+            autoFireworks();
+            
+            // Tiếp tục bắn mỗi 0.2 giây
+            setInterval(autoFireworks, 20);
+            
+            // Bắn thêm nhiều pháo hoa cùng lúc khi bắt đầu
+            for(let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * (window.innerHeight * 0.5) + window.innerHeight * 0.3;
+                    createFirework(x, y);
+                }, i * 600); // Mỗi quả cách nhau 300ms
+            }
+        }
+
+        // Chạy ngay khi trang load xong
+        window.addEventListener('load', startFireworks);
+
+        // Thêm pháo hoa khi click
+        document.addEventListener('click', (e) => {
+            if(e.target.classList.contains('gift-container')) return;
+            createFirework(e.clientX, window.innerHeight * 0.7);
+        });
+
+        // Thêm code xử lý âm thanh
+        const music = document.getElementById('bgMusic');
+        const toggleButton = document.getElementById('toggleMusic');
+        const volumeIcon = toggleButton.querySelector('i');
+
+        toggleButton.addEventListener('click', () => {
+            if (music.paused) {
+                music.play();
+                volumeIcon.className = 'fas fa-volume-up';
+            } else {
+                music.pause();
+                volumeIcon.className = 'fas fa-volume-mute';
+            }
+        });
+
+        // Tự động phát nhạc khi load trang
+        window.addEventListener('load', function() {
+            let playPromise = music.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    console.log("Audio started playing");
+                })
+                .catch(error => {
+                    console.log("Audio autoplay was prevented");
+                });
+            }
+        });
+
+        // Phát nhạc khi user tương tác với trang
+        document.addEventListener('click', function() {
+            if (music.paused) {
+                music.play();
+                volumeIcon.className = 'fas fa-volume-up';
+            }
+        }, { once: true });
+    </script>
+    <div class="tiktok-logo">
+        <i class="fab fa-tiktok"></i>tiktok: tgrey.hoc.it
+    </div>
+</body>
+</html> 
